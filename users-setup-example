@@ -1,1 +1,1 @@
-192.168.13.49	ansible_connection=ssh	ansible_password=strong_password	ansible_user=ubuntu	ansible_become_password=strong_password
+192.168.0.XX	ansible_connection=ssh	ansible_password=strong_password	ansible_user=ubuntu	ansible_become_password=strong_password
