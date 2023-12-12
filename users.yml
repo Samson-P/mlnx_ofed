@@ -1,0 +1,32 @@
+---
+
+- name: deploy-user mngt
+  connection: ansible.netcommon.network_cli
+  gather_facts: false
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: create deploy-user with a bash shell
+      ansible.builtin.user:
+        name: deploy-user
+        shell: /bin/bash
+        home: /home/deploy-user
+        generate_ssh_key: yes
+
+    - name: add our keys as authorised for deploy-user
+      ansible.posix.authorized_key:
+        user: deploy-user
+        key: '{{ item }}'
+      with_file:
+        - public_keys/samson
+        - public_keys/alex
+        - public_keys/test
+
+    - name: configure /etc/sudoers.d/deploy-user
+      ansible.builtin.template:
+        src: deploy-user
+        dest: /etc/sudoers.d/deploy-user
+        owner: root
+        group: root
+        mode: '0644'

@@ -1,0 +1,13 @@
+---
+
+- name: deactivate ubuntu user
+  connection: ansible.netcommon.network_cli
+  gather_facts: false
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: block ubuntu password
+      ansible.builtin.user:
+        name: ubuntu
+        password_lock: yes

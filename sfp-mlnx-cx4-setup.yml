@@ -1,0 +1,32 @@
+---
+
+- name: StartUp SFP MLNX CX-4 firmware and prep to tests
+  connection: ansible.netcommon.network_cli
+  gather_facts: false
+  hosts: all
+  vars_files:
+    - 'defaults/main.yml'
+  become: yes
+  tasks:
+
+    - name: add an apt Mellanox Technologies GPG-KEY's
+      ansible.builtin.get_url:
+        url: http://www.mellanox.com/downloads/ofed/RPM-GPG-KEY-Mellanox
+        dest: /usr/share/keyrings/mlnx_ofed.asc
+        mode: '0644'
+        force: true
+
+    - name: add a mlnx_ofed repo signed-by key of last step
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/mlnx_ofed.asc] http://linux.mellanox.com/public/repo/mlnx_ofed/5.8-3.0.7.0/ubuntu22.04/x86_64 ./"
+
+    - name: apt update & install mlnx-ofed-all iperf3
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg:
+          - iperf3
+          - mlnx-ofed-all
+
+    - name: reboot
+      ansible.builtin.reboot:
+
