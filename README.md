@@ -1,9 +1,13 @@
 # mlnx_ofed
 Ansible playbooks to prepare host with Mellanox CX-4 /dev/enp
 
-Dependence to connect via password:
+## Dependences
+
+Dependence to connect via password (on deployment host):
 
 `sudo apt-get install sshpass`
+
+## SetUp users and credencials
 
 To create deploy-user and add him our keys as authorized_keys:
 
@@ -13,7 +17,9 @@ Block ubuntu password:
 
 `ansible-playbook -i inventory remove-ubuntu.yml`
 
-Validate:
+## Validate users
+
+Checking that ubuntu user does not support connecting via ssh
 
     (venv) deploy-user@spc:~/mlnx_ofed$ ansible -i inventory all -m ping
     192.168.0.10 | SUCCESS => {
@@ -30,12 +36,11 @@ Validate:
         "unreachable": true
     }
 
+## SetUp
+
 To prepare nodes for sfp connections (installation firmware from [mlnx_ofed](https://linux.mellanox.com/public/repo/mlnx_ofed/5.8-3.0.7.0/ubuntu22.04/x86_64/)):
 
 `ansible-playbook -i inventory sfp-mlnx-cx4-setup.yml`
-
-
-Check it works!
 
     (venv) deploy-user@spc:~/mlnx_ofed$ ansible-playbook -i inventory sfp-mlnx-cx4-setup.yml
 
@@ -56,4 +61,18 @@ Check it works!
     PLAY RECAP **************************************************************
     192.168.0.10: ok=4    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 
-[Reference](https://docs.nvidia.com/networking/display/mlnxofedv461000/installing+mellanox+ofed#src-12013402_InstallingMellanoxOFED-ofedinstallationusingapt-get)
+## Validate
+
+How to:
+- Configure sfp net devices with netplan, set static address
+- sudo apt install iperf3
+- Run iperf3 benchmark with 2 hosts
+
+
+## Reference
+
+[docs.nvidia.com/installing_mellanox_ofed](https://docs.nvidia.com/networking/display/mlnxofedv461000/installing+mellanox+ofed#src-12013402_InstallingMellanoxOFED-ofedinstallationusingapt-get)
+
+[thelinuxcluster.com/installing-mellanox-ofed](https://thelinuxcluster.com/2023/06/28/installing-mellanox-ofed-mlnx_ofed-packages-using-ansible/)
+
+[linux.mellanox.com/public_repo](https://linux.mellanox.com/public/repo/mlnx_ofed/5.8-3.0.7.0/ubuntu22.04/x86_64/)
